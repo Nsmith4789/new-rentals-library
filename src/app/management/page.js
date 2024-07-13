@@ -12,28 +12,17 @@ export default function ManagementPage() {
     async function fetchData() {
       try {
         const documents = await getAllDocuments(db, "rentals");
-        if (documents && documents.length > 0) {
-          const rentalInstances = documents.map(
-            (doc) =>
-              new Rentals(
-                doc.title,
-                doc.year,
-                doc.rentalId,
-                doc.availableRentals
-              )
+        const rentalInstances = documents.map((doc) => {
+          return new Rentals(
+            doc.title,
+            doc.year,
+            doc.rentalId,
+            doc.availableRentals
           );
-          setLibrary(
-            (prevLibrary) =>
-              new MovieLibrary("Hollywood", [
-                ...prevLibrary.rentals,
-                ...rentalInstances,
-              ])
-          );
-        } else {
-          console.log("No documents found for 'rentals'");
-        }
+        });
+        setLibrary(new MovieLibrary("Hollywood", rentalInstances)); // Corrected the constructor call
       } catch (error) {
-        console.error("Failed fetching data", error);
+        console.error("Failed fetching data", error); // Improved error logging
       }
     }
 
